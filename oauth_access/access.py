@@ -172,7 +172,7 @@ class OAuthAccess(object):
     
     @property
     def callback(self):
-        return load_path_attr(self._obtain_setting("endpoints", "callback"))
+        return load_path_attr(self._obtain_setting("endpoints", "callback"))()
     
     def authorization_url(self, token=None):
         if token is None:
