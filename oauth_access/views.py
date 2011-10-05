@@ -9,14 +9,19 @@ from oauth_access.exceptions import MissingToken
 def oauth_login(request, service,
         redirect_field_name="next", redirect_to_session_key="redirect_to"):
     access = OAuthAccess(service)
+    url_extra = ""
+    
     if not service == "facebook":
         token = access.unauthorized_token()
         request.session["%s_unauth_token" % service] = token.to_string()
     else:
+        if getattr(request, 'is_touch_device', False):
+            url_extra = "&display=touch"
         token = None
+
     if hasattr(request, "session"):
         request.session[redirect_to_session_key] = request.GET.get(redirect_field_name)
-    return HttpResponseRedirect(access.authorization_url(token))
+    return HttpResponseRedirect(access.authorization_url(token)+url_extra)
 
 
 def oauth_callback(request, service):
