@@ -19,7 +19,7 @@ def oauth_login(request, service,
             url_extra = "&display=touch"
         token = None
 
-    if hasattr(request, "session"):
+    if hasattr(request, "session") and redirect_to_session_key in requst.GET:
         request.session[redirect_to_session_key] = request.GET.get(redirect_field_name)
     return HttpResponseRedirect(access.authorization_url(token)+url_extra)
 
