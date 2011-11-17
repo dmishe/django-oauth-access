@@ -34,8 +34,9 @@ class ServiceFail(Exception):
 
 class OAuthAccess(object):
     
-    def __init__(self, service):
+    def __init__(self, service, token=None):
         self.service = service
+        self.token = token
         self.signature_method = oauth.SignatureMethod_HMAC_SHA1()
         self.consumer = oauth.Consumer(self.key, self.secret)
     
@@ -223,7 +224,8 @@ class OAuthAccess(object):
         else:
             return assoc.user
     
-    def make_api_call(self, kind, url, token, method="GET", **kwargs):
+    def make_api_call(self, kind, url, token=None, method="GET", **kwargs):
+        token = token or self.token
         if isinstance(token, OAuth20Token):
             request_kwargs = dict(method=method)
             if method == "POST":

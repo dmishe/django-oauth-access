@@ -4,7 +4,6 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
-
 class UserAssociation(models.Model):
     
     user = models.ForeignKey(User)
@@ -18,3 +17,7 @@ class UserAssociation(models.Model):
     
     def expired(self):
         return datetime.datetime.now() < self.expires
+        
+    def get_access(self):
+        from oauth_access.access import OAuthAccess, OAuth20Token
+        return OAuthAccess(self.service, token=OAuth20Token(self.token))
